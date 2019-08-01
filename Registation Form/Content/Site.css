@@ -1,0 +1,116 @@
+﻿body {
+    margin: 0;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"; color: #1f1f1f;
+    background: #536976; /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #292E49, #536976); /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #292E49, #536976); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.main-cont {
+    min-height: 100%;
+    margin-bottom: -50px;
+}
+
+*{
+    text-align: center;
+}
+
+footer {
+    width: 100%;
+    color: #a7a7a7;
+}
+
+header{
+
+}
+
+.navbar-title{
+    padding: 30px 0;
+}
+
+a{
+    text-decoration: none;
+}
+
+li {
+    display: inline-block;
+    padding: 7px;
+    margin: 0 15px;
+    font-weight: bold;
+    color: #dbdbdb;
+    border: 2px solid #dbdbdb;
+    font-size: 12px;
+    border-radius: 10px;
+}
+
+ul{
+    padding: 0;
+}
+
+
+h1 {
+    color: #dbdbdb;
+    font-size: 25px;
+}
+
+.linebreak {
+    width: 90%;
+    height: 5px;
+    border-radius: 10px;
+    background: #dbdbdb;
+    margin: 10px auto;
+}
+
+
+table{
+    margin-left: 40px;
+}
+
+
+th{
+    padding: 20px;
+}
+
+.form-group{
+    margin-top: 10px;
+}
+
+.form-control {
+    padding: 5px;
+    border-radius: 10px;
+    border: none;
+}
+
+.btn{
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+}
+
+a.cancel-btn {
+    padding: 5px;
+    border-radius: 10px;
+    color: inherit;
+    text-decoration:underline;
+}
+
+.add-button{
+    margin-top: 15px;
+}
+
+a.add-button {
+    padding: 5px;
+    border: 2px solid #212021;
+    background: #212021;
+    border-radius: 10px;
+    color: #dbdbdb;
+}
+
+.btn-default{
+    margin-top: 20px;
+}
+
+a.default-link{
+    text-decoration: underline;
+    color: inherit;
+}

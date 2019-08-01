@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Registation_Form.Models.Worker>
+@{
+    ViewBag.Title = "Список работников";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Список работников</h2>
+
+<div class="list-group">
+    <table class="table">
+            <tr>
+                <th>
+                    Фамилия
+                </th>
+                <th>
+                    Имя
+                </th>
+                <th>
+                    Отчество
+                </th>
+                <th>
+                    Старт работы
+                </th>
+                <th>
+                    Должность
+                </th>
+                <th>
+                    Компания
+                </th>
+                <th></th>
+            </tr>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Surname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MiddleName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.HiringDay)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Position)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Company.Name)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Изменить", "EditWorker", new { id = item.Id }, new { @class = "default-link" }) |
+                        @Html.ActionLink("Удалить", "DeleteWorker", new { id = item.Id }, new { @class = "default-link" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+    <div class="add-button">@Html.ActionLink("Добавить работника", "AddWorker", null, new { @class="add-button" })</div>
+</div>
+
+
+

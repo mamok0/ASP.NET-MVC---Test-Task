@@ -1,0 +1,33 @@
+﻿@model Registation_Form.Models.Company
+
+@{
+    ViewBag.Title = "Удаление компании";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Вы уверены, что хотите удалить данную компанию?</h2>
+
+<div>
+
+    @Html.DisplayNameFor(model => model.Name):
+    @Html.DisplayFor(model => model.Name)<br />
+
+    @Html.DisplayNameFor(model => model.CompanySize):
+    @Html.DisplayFor(model => model.CompanySize)<br />
+
+    @Html.DisplayNameFor(model => model.LegalStatus):
+    @Html.DisplayFor(model => model.LegalStatus)<br />
+
+
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Удалить" class="btn btn-default" /> |
+            @Html.ActionLink("Отмена", "CompaniesList", null, new { @class="cancel-btn" })
+        </div>
+    }
+</div>

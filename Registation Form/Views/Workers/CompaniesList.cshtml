@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Registation_Form.Models.Company>
+@{
+    ViewBag.Title = "Список компаний";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="table">
+    <tr>
+        <th>
+            Id
+        </th>
+        <th>
+            Наименование
+        </th>
+        <th>
+            Кол-во сотрудников
+        </th>
+        <th>
+            Организационно-правовая форма
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CompanySize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LegalStatus)
+            </td>
+            <td>
+                @Html.ActionLink("Изменить", "EditCompany", new { id = item.Id }, new { @class = "default-link" }) |
+                @Html.ActionLink("Удалить", "DeleteCompany", new { id = item.Id }, new { @class = "default-link" })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div class="add-button">@Html.ActionLink("Добавить компанию", "AddCompany", null, new { @class="add-button" })</div>

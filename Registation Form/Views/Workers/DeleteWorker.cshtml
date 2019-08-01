@@ -1,0 +1,37 @@
+﻿@model Registation_Form.Models.Worker
+
+@{
+    ViewBag.Title = "Удаление работника";
+}
+
+<h2>Вы уверены что хотите удалить данного работника?</h2>
+
+<div>
+    @Html.DisplayNameFor(model => model.Surname):
+    @Html.DisplayFor(model => model.Surname)<br />
+
+    @Html.DisplayNameFor(model => model.Name):
+    @Html.DisplayFor(model => model.Name)<br />
+
+    @Html.DisplayNameFor(model => model.MiddleName):
+    @Html.DisplayFor(model => model.MiddleName)<br />
+
+    @Html.DisplayNameFor(model => model.HiringDay):
+    @Html.DisplayFor(model => model.HiringDay)<br />
+
+    @Html.DisplayNameFor(model => model.Position):
+    @Html.DisplayFor(model => model.Position)<br />
+
+    @Html.DisplayNameFor(model => model.Company.Name):
+    @Html.DisplayFor(model => model.Company.Name)<br />
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Удалить" class="btn btn-default" />
+            @Html.ActionLink("Отмена", "WorkersList", null, new { @class = "cancel-btn" })
+        </div>
+    }
+</div>
