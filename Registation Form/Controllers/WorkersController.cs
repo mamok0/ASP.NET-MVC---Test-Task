@@ -6,15 +6,48 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Registation_Form.BLLayer;
 using Registation_Form.Models;
 
 namespace Registation_Form.Controllers
 {
     public class WorkersController : Controller
     {
-        private WorkersCompaniesDbEntities db = new WorkersCompaniesDbEntities();
+        RegFormService regFormService = new RegFormService();
 
-        // GET: Workers
+        public WorkerViewModel workerDTOtoVM(WorkerDTO workerDTO)
+        {
+            return new WorkerViewModel
+            {
+                Id = workerDTO.Id,
+                Name = workerDTO.Name,
+                Surname = workerDTO.Surname,
+                MiddleName = workerDTO.MiddleName,
+                Position = workerDTO.Position,
+                HiringDay = workerDTO.HiringDay,
+                CompanyId = workerDTO.CompanyId,
+                Company = new CompanyViewModel
+                {
+                    Id = workerDTO.Company.Id,
+                    Name = workerDTO.Company.Name,
+                    CompanySize = workerDTO.Company.CompanySize,
+                    LegalStatus = workerDTO.Company.LegalStatus
+                }
+            };
+        }
+
+        public CompanyViewModel companyDTOtoVM(CompanyDTO companyDTO)
+        {
+            return new CompanyViewModel
+            {
+                Id = companyDTO.Id,
+                Name = companyDTO.Name,
+                CompanySize = companyDTO.CompanySize,
+                LegalStatus = companyDTO.LegalStatus
+            };
+        }
+
+
         public ActionResult Index()
         {
             return View();
@@ -22,13 +55,13 @@ namespace Registation_Form.Controllers
 
         public ActionResult WorkersList()
         {
-            var workers = db.Workers.Include(w => w.Company);
+            var workers = regFormService.GetWorkers().Select(x => workerDTOtoVM(x));
             return View(workers.ToList());
         }
 
         public ActionResult CompaniesList()
         {
-            var companies = db.Companies.ToList();
+            var companies = regFormService.GetCompanies().Select(x => companyDTOtoVM(x));
             return View(companies);
         }
 
@@ -39,12 +72,11 @@ namespace Registation_Form.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddCompany([Bind(Include = "Id,Name,CompanySize,LegalStatus")] Company company)
+        public ActionResult AddCompany([Bind(Include = "Id,Name,CompanySize,LegalStatus")] CompanyViewModel company)
         {
             if (ModelState.IsValid)
             {
-                db.Companies.Add(company);
-                db.SaveChanges();
+                regFormService.AddCompany(company);
                 return RedirectToAction("CompaniesList");
             }
             return View();
@@ -53,7 +85,7 @@ namespace Registation_Form.Controllers
         // GET: Workers/Create
         public ActionResult AddWorker()
         {
-            ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name");
+            ViewBag.CompanyId = new SelectList(regFormService.GetCompanies(), "Id", "Name");
             return View();
         }
 
@@ -62,16 +94,14 @@ namespace Registation_Form.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddWorker([Bind(Include = "Id,Surname,Name,MiddleName,HiringDay,Position,CompanyId")] Worker worker)
+        public ActionResult AddWorker([Bind(Include = "Id,Surname,Name,MiddleName,HiringDay,Position,CompanyId")] WorkerViewModel worker)
         {
             if (ModelState.IsValid)
             {
-                db.Workers.Add(worker);
-                db.SaveChanges();
+                regFormService.AddWorker(worker);
                 return RedirectToAction("WorkersList");
             }
 
-            ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name", worker.CompanyId);
             return View(worker);
         }
 
@@ -82,26 +112,25 @@ namespace Registation_Form.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Worker worker = db.Workers.Find(id);
+            WorkerViewModel worker = workerDTOtoVM(regFormService.GetWorker(id));
             if (worker == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name", worker.CompanyId);
+            ViewBag.CompanyId = new SelectList(regFormService.GetCompanies(), "Id", "Name", worker.CompanyId);
             return View(worker);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditWorker([Bind(Include = "Id,Surname,Name,MiddleName,HiringDay,Position,CompanyId")] Worker worker)
+        public ActionResult EditWorker([Bind(Include = "Id,Surname,Name,MiddleName,HiringDay,Position,CompanyId")] WorkerViewModel worker)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(worker).State = EntityState.Modified;
-                db.SaveChanges();
+                regFormService.EditWorker(worker);
                 return RedirectToAction("WorkersList");
             }
-            ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name", worker.CompanyId);
+            ViewBag.CompanyId = new SelectList(regFormService.GetCompanies(), "Id", "Name", worker.CompanyId);
             return View(worker);
         }
 
@@ -111,7 +140,7 @@ namespace Registation_Form.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Company company = db.Companies.Find(id);
+            CompanyViewModel company = companyDTOtoVM(regFormService.GetCompany(id));
             if (company == null)
             {
                 return HttpNotFound();
@@ -121,12 +150,11 @@ namespace Registation_Form.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditCompany([Bind(Include = "Id,Name,CompanySize,LegalStatus")] Company company)
+        public ActionResult EditCompany([Bind(Include = "Id,Name,CompanySize,LegalStatus")] CompanyViewModel company)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(company).State = EntityState.Modified;
-                db.SaveChanges();
+                regFormService.EditCompany(company);
                 return RedirectToAction("CompaniesList");
             }
             //ViewBag.CompanyId = new SelectList(db.Companies, "Id", "Name", company.CompanyId);
@@ -140,7 +168,7 @@ namespace Registation_Form.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Worker worker = db.Workers.Find(id);
+            WorkerViewModel worker = workerDTOtoVM(regFormService.GetWorker(id));
             if (worker == null)
             {
                 return HttpNotFound();
@@ -152,9 +180,8 @@ namespace Registation_Form.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteWorkerConfirmed(int id)
         {
-            Worker worker = db.Workers.Find(id);
-            db.Workers.Remove(worker);
-            db.SaveChanges();
+            WorkerViewModel worker = workerDTOtoVM(regFormService.GetWorker(id));
+            regFormService.DeleteWorker(worker);
             return RedirectToAction("WorkersList");
         }
 
@@ -164,7 +191,7 @@ namespace Registation_Form.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Company company = db.Companies.Find(id);
+            CompanyViewModel company = companyDTOtoVM(regFormService.GetCompany(id));
             if (company == null)
             {
                 return HttpNotFound();
@@ -177,9 +204,8 @@ namespace Registation_Form.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteCompanyConfirmed(int id)
         {
-            Company company = db.Companies.Find(id);
-            db.Companies.Remove(company);
-            db.SaveChanges();
+            CompanyViewModel company = companyDTOtoVM(regFormService.GetCompany(id));
+            regFormService.DeleteCompany(company);
             return RedirectToAction("CompaniesList");
         }
 
@@ -187,7 +213,7 @@ namespace Registation_Form.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                regFormService.Dispose();
             }
             base.Dispose(disposing);
         }
